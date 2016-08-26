@@ -14,6 +14,11 @@ Breaking changes:
 
 New features:
 
+- add registry settings for thumb and icon handling  in tables, lists and portlets
+  https://github.com/plone/Products.CMFPlone/issues/1734 (PLIP) 
+  recompiled bundle plone-logged-in
+  requires upgrade step (reapply profile)[fgrcon]
+  
 - Adapt code and tests to the new indexing operations queueing.
   Part of PLIP 1343: https://github.com/plone/Products.CMFPlone/issues/1343
   [gforcada]
