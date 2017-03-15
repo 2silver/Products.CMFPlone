@@ -8,6 +8,8 @@ Changelog
 4.3.4.1 (2014-11-13)
 --------------------
 
+- Respect pa.multilingual installations for Review-Portlet catalog searches
+
 - Make inline validation of AT multiple selection widget work.
   [gbastien]
 

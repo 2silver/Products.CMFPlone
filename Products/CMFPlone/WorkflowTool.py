@@ -12,6 +12,27 @@ from Products.CMFCore.permissions import ManagePortal
 from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
 from Products.CMFPlone.PloneBaseTool import PloneBaseTool
 
+# Is there a multilingual addon?
+import pkg_resources
+try:
+    pkg_resources.get_distribution('Products.LinguaPlone')
+except pkg_resources.DistributionNotFound:
+    HAS_MULTILINGUAL = False
+    HAS_LINGUAPLONE = False
+else:
+    HAS_MULTILINGUAL = True
+    HAS_LINGUAPLONE = True
+
+if not HAS_MULTILINGUAL:
+    try:
+        pkg_resources.get_distribution('plone.app.multilingual')
+    except pkg_resources.DistributionNotFound:
+        HAS_MULTILINGUAL = False
+        HAS_PAM = False
+    else:
+        HAS_MULTILINGUAL = True
+        HAS_PAM = True
+
 
 class WorkflowTool(PloneBaseTool, BaseTool):
 
@@ -226,10 +247,13 @@ class WorkflowTool(PloneBaseTool, BaseTool):
                     catalog_vars = dict(portal_type=types_by_wf.get(id, []))
                     for key in wlist_def.var_matches:
                         catalog_vars[key] = wlist_def.var_matches[key]
-                    # Support LinguaPlone review situations, you want to see
-                    # content in *all* languages
-                    if 'Language' not in catalog_vars:
-                        catalog_vars['Language'] = 'all'
+                    # Support LinguaPlone review situations
+                    if HAS_MULTILINGUAL and\
+                       HAS_LINGUAPLONE and\
+                       not HAS_PAM\
+                       and 'Language' in catalog.indexes():
+                        if 'Language' not in catalog_vars:
+                            catalog_vars['Language'] = 'all'
                     for result in catalog.searchResults(catalog_vars):
                         o = result.getObject()
                         if o \
